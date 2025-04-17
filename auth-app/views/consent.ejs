@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Consent</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .scopes {
+        margin: 20px 0;
+      }
+      .scope-item {
+        margin-bottom: 10px;
+      }
+      button {
+        padding: 10px 15px;
+        margin-right: 10px;
+        border: none;
+        cursor: pointer;
+      }
+      .approve {
+        background: #4285f4;
+        color: white;
+      }
+      .reject {
+        background: #f44336;
+        color: white;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Access Authorization</h1>
+
+    <p><img src="<%= client.logo_uri %>" /></p>
+    <p>
+      <strong><%= client.client_name || client.client_id %></strong> is
+      requesting access to the following permissions:
+    </p>
+
+    <form action="/consent" method="post">
+      <input type="hidden" name="challenge" value="<%= challenge %>" />
+
+      <div class="scopes">
+        <% requestedScope.forEach(function(scope) { %>
+        <div class="scope-item">
+          <label>
+            <input type="checkbox" name="scopes" value="<%= scope %>" checked />
+            <%= scope %>
+          </label>
+        </div>
+        <% }); %>
+      </div>
+
+      <div>
+        <button type="submit" name="submit" value="accept" class="approve">
+          Authorize
+        </button>
+        <button type="submit" name="submit" value="reject" class="reject">
+          Reject
+        </button>
+      </div>
+    </form>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Client Application</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 10px 15px;
+        background: #4285f4;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+      }
+      .user-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 4px;
+        margin-top: 20px;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>OAuth 2.0 Client Application</h1>
+
+    <% if (isAuthenticated) { %>
+    <div>
+      <p>You are authenticated!</p>
+      <a href="/protected-data" class="btn">Access protected data</a>
+      <a href="/logout" class="btn" style="background: #f44336">Logout</a>
+    </div>
+
+    <% if (userInfo) { %>
+    <div class="user-info">
+      <h2>User Information</h2>
+      <p><strong>ID:</strong> <%= userInfo.sub %></p>
+      <% if (userInfo.email) { %>
+      <p><strong>Email:</strong> <%= userInfo.email %></p>
+      <% } %> <% if (userInfo.name) { %>
+      <p><strong>Name:</strong> <%= userInfo.name %></p>
+      <% } %>
+    </div>
+    <% } %> <% } else { %>
+    <p>You are not authenticated. Log in to access protected resources.</p>
+    <a href="/login" class="btn">Login or Connect account</a>
+    <% } %>
+  </body>
+</html>

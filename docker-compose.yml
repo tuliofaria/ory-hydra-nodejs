@@ -1,0 +1,55 @@
+services:
+  hydra-migrate:
+    image: oryd/hydra:v2.3.0
+    environment:
+      - DSN=postgres://hydra:secret@postgres:5432/hydra?sslmode=disable
+    command: migrate sql -e --yes
+    restart: on-failure
+    depends_on:
+      - postgres
+    networks:
+      - hydra-network
+
+  hydra:
+    image: oryd/hydra:v2.3.0
+    depends_on:
+      - hydra-migrate
+    ports:
+      - "4444:4444" # public
+      - "4445:4445" # admin
+    environment:
+      - DSN=postgres://hydra:secret@postgres:5432/hydra?sslmode=disable
+      - URLS_SELF_ISSUER=http://localhost:4444/
+      - URLS_CONSENT=http://localhost:3000/consent
+      - URLS_LOGIN=http://localhost:3000/login
+      - SERVE_PUBLIC_CORS_ENABLED=true
+      - SERVE_PUBLIC_CORS_ALLOWED_METHODS=POST,GET,PUT,DELETE
+      - SERVE_ADMIN_CORS_ENABLED=true
+      - SERVE_ADMIN_CORS_ALLOWED_METHODS=POST,GET,PUT,DELETE
+      - STRATEGIES_ACCESS_TOKEN=opaque
+      - SECRETS_SYSTEM=youReallyNeedToChangeThis
+      - LOG_LEVEL=debug
+    command: serve all --dev
+    restart: unless-stopped
+    networks:
+      - hydra-network
+
+  postgres:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=hydra
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=hydra
+    networks:
+      - hydra-network
+    volumes:
+      - hydra-postgres-data:/var/lib/postgresql/data
+
+networks:
+  hydra-network:
+    driver: bridge
+
+volumes:
+  hydra-postgres-data:
