@@ -30,6 +30,26 @@ docker compose exec hydra hydra create client \
     --logo-uri <https://url-to-partner-logo.png>
 ```
 
+Or with a JSON:
+
+```shell
+curl -X POST 'http://127.0.0.1:4445/admin/clients' -H 'Content-Type: application/json' -d @client-pkce.json
+```
+
+```json
+{
+  "client_id": "idoftheclient2",
+  "client_secret": "my-secret",
+  "grant_types": ["authorization_code", "refresh_token"],
+  "response_types": ["code", "id_token"],
+  "scope": "openid offline profile email",
+  "token_endpoint_auth_method": "client_secret_post",
+  "access_token_strategy": "opaque",
+  "redirect_uris": ["http://localhost:5555/callback"],
+  "authorization_code_grant_access_token_lifespan": "165000h0m0s"
+}
+```
+
 Start `auth-app` and `client-app`:
 
 ```shell
