@@ -84,14 +84,13 @@ app.get("/callback", async (req, res) => {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Basic ${Buffer.from(
-          `${clientId}:${clientSecret}`
-        ).toString("base64")}`,
       },
       body: new URLSearchParams({
         grant_type: "authorization_code",
         code,
         redirect_uri: redirectUri,
+        client_id: clientId,
+        client_secret: clientSecret,
       }),
     });
 
